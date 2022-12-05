@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
+import { Session, SessionData } from 'express-session';
 import User from './entities/user';
 
 export type ControllerFn = (
   req: Request & {
-    session?: any;
+    session: Session &
+      Partial<SessionData> & {
+        userId?: number;
+      };
     cookies?: any;
     user?: User | null;
   },
@@ -16,4 +20,9 @@ export type CreateUserInput = {
   email: string;
   password: string;
   username: string;
+};
+
+export type LoginInput = {
+  usernameOrEmail: string;
+  password: string;
 };
