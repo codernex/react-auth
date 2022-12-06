@@ -1,4 +1,6 @@
 import connectRedis from 'connect-redis';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Application } from 'express';
 import session from 'express-session';
@@ -7,13 +9,18 @@ import { errMiddleware } from './middleware/err';
 import authRoute from './routes/auth';
 import userRouter from './routes/user';
 import dataSource from './utils/typeorm.config';
-
 dotenv.config();
 
 const server = async (app: Application) => {
   const redisClient = new Redis();
   const RedisStore = connectRedis(session);
-
+  app.use(
+    cors({
+      credentials: true,
+      origin: 'http://localhost:3000'
+    })
+  );
+  app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 
